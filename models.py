@@ -66,6 +66,7 @@ class Project(BaseModel):
 class TestCaseForm(BaseModel):
     summaryId: int
     featureTested: str 
+    testedBy: str
     desc: str 
     isAutomated: bool
     result: Literal["Pass"] | Literal["Fail"] | Literal["Flaky"]
@@ -95,7 +96,7 @@ class TestSummaryForm(BaseModel):
     testEnvironmentDesc: str
     objectives: list[TestEnum]
     reasonForTesting: str
-    overallResulstDesc: str    
+ 
 
 class TestSummary(BaseModel):
     summaryId: int
@@ -109,7 +110,6 @@ class TestSummary(BaseModel):
     objectives: list[TestEnum]
     reasonForTesting: str
 
-    testCases: list[TestCase] 
-    overallResulstDesc: str
+    overallResults: str | None
     isFinalized: bool
     

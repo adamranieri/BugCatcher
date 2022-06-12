@@ -133,7 +133,7 @@ def get_project_by_id(projectId: int):
 @app.post("/summaries",  response_model=TestSummary, status_code=201)
 def create_test_summary(summary_form: TestSummaryForm) -> TestSummary:
     
-    summary = TestSummary(summaryId=randint(10000,99999), **summary_form.dict())
+    summary = TestSummary(summaryId=randint(10000,99999), **summary_form.dict(), isFinalized=False)
 
     for project in projects:
 
@@ -161,6 +161,16 @@ def get_summary_by_id(summaryId: int) -> TestSummary:
         raise HTTPException(404, f'no Test Summary with id {summaryId} found')
 
 
+@app.get("/cases", response_model=list[TestCase])
+def get_cases(summaryId: int | None = None):
+    
+    if summaryId:
+        return [c for c in cases if c.summaryId == summaryId]
+    else:
+        return cases
+
+
+
 @app.post("/cases", response_model=TestCase, status_code=201)
 def create_test_case(case_form: TestCaseForm) -> TestCase:
     
@@ -180,12 +190,12 @@ def delete_test_case(caseId: int):
     
     for i, case in enumerate(cases):
         
-        if case == caseId:
+        if case.caseId == caseId:
             del cases[i]
             break
 
     else:
-        raise HTTPException(404, 'no case with id {caseId} found')
+        raise HTTPException(404, f'no case with id {caseId} found')
 
 
 ## debug routes
