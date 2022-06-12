@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Editor</title>
+</head>
+<body>
+
+    <h1>Defect Breakdown</h1>
+
+    <h2 id="idHeading"></h2>
+    <h2 id="statusHeading"></h2>
+
+    <span>
+        <button data-action="declined">Declined</button>
+        <button data-action="accepted">Accepted</button>
+        <button data-action="rejected">Rejected</button>
+        <button data-action="fixed">Fixed</button>
+        <button data-action="shelved">Shelved</button>
+    </span>
+
+    
+</body>
+<script src="fetches.js"></script>
+<script>
+
+    const idHeading = document.getElementById("idHeading");
+    const statusHeading = document.getElementById("statusHeading");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    async function populate(){
+
+        const defect = await getDefectById(id);
+
+        idHeading.innerText = defect.defectId;
+        statusHeading.innerText = defect.status;
+
+    }
+
+    populate()
+
+    document.addEventListener("click", function(event){
+
+        const action = event.target.dataset.action;
+
+        switch(action){
+            case "declined":{
+                const answer = confirm("Are you sure you want to decline this defect");
+                if(answer){
+                    updateStatus(id,"Declined")
+                    location.reload();
+                }
+            }break;
+
+            case "accepted":{
+                const answer = confirm("Are you sure you want to accept this defect");              
+                if(answer){
+                    updateStatus(id,"Accepted")
+                    location.reload();
+                }
+            }break;
+
+            case "rejected":{
+                const answer = confirm("Are you sure you want to reject this defect");
+                if(answer){
+                    updateStatus(id,"Rejected")
+                    location.reload();
+                }
+
+            }break;
+
+            case "fixed":{
+                const answer = confirm("Are you sure you want to fix this defect");
+                if(answer){
+                    updateStatus(id,"Fixed")
+                    location.reload();
+                }
+
+            }break;
+
+            case "shelved":{
+                const answer = confirm("Are you sure you want to shelve this defect");
+                if(answer){
+                    updateStatus(id,"Shelved")
+                    location.reload();
+                }
+            }break;
+
+
+        }
+
+    })
+
+
+</script>
+</html>

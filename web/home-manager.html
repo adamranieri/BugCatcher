@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+</head>
+<body>
+    
+    <h1 id="welcomeHeading"></h1>
+
+    <h3>Quick Links</h3>
+
+    <nav>
+        <a href="defect-reporter.html">Report a Defect</a>
+        <a href="defect-dashboard.html">Defect Dashboard</a>
+    </nav>
+    
+    
+</body>
+<script>
+
+    const welcome = document.getElementById("welcomeHeading");
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    welcome.innerText = `Welcome ${user.username}`;
+ 
+
+</script>
+</html>

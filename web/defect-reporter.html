@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Reporter</title>
+</head>
+
+<body>
+
+    <form id="defectForm" >
+
+        <fieldset>
+            <legend>Assignment</legend>
+
+            <label for="assignedTo">Assign To:</label>
+            <input list="employeesList" name="assignedTo">
+            <datalist name="employeesList" id="employeesList"></datalist>
+
+
+            <br/>
+
+            <label for="severity">Severity:</label>
+            <select name="severity">
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+            </select>
+
+            <br/>
+
+            <label for="priority">Priority: </label>
+            <select name="priority">
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+            </select>
+
+            <br/>
+
+            <label for="dateReported">Date Reported: </label>
+            <input type="date" name="dateReported">
+
+        </fieldset>
+
+        <fieldset>
+            <legend>Overview</legend>
+
+            <label for="description">Bug Description:</label>
+            <input type="text" name="description">
+            <br/>
+
+            <label for="steps">Steps to Reproduce</label>
+            <br>
+            <textarea name="steps" cols="30" rows="10"></textarea>
+
+        </fieldset>
+
+        <button>Submit</button>
+
+    </form>
+    
+</body>
+<script>
+    getAllEmployees()
+
+    async function getAllEmployees(){
+        const response = await fetch(`${window.location.origin}/employees`);
+        const employees = await response.json();
+        const listHtml = employees.map(e => `<option>${e.username}</option>`).join("");
+        
+        const employeesList = document.getElementById("employeesList");
+        employeesList.innerHTML= listHtml;
+    }
+
+    const defectForm = document.getElementById("defectForm");
+
+
+    defectForm.addEventListener("submit", async function(event){
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        const assignedTo = formData.get("assignedTo");
+        const severity = formData.get("severity");
+        const priority = formData.get("priority");
+        const dateReported = new Date(formData.get("dateReported")).getTime();
+        const desc = formData.get("description");
+        const stepsToReproduce = formData.get("steps");
+
+        const defectForm = {assignedTo,severity,priority,dateReported,desc,stepsToReproduce};
+
+        const options = {
+            method:"POST", 
+            body: JSON.stringify(defectForm), 
+            headers:{
+                "Content-Type":"application/json"
+            }};
+
+        const response = await fetch(`${window.location.origin}/defects`, options);
+
+
+        if(response.status === 201){
+            alert("Succssfully added defect");
+        }else{
+            alert("Failed to add defect");
+        }
+
+    })
+
+</script>
+
+</html>
