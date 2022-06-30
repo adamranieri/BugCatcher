@@ -1,7 +1,5 @@
 from pydantic import BaseModel
-from enums import Level, TestResult
-from models.test_documents import TestPlan, TestStrategy
-
+from .enums import Level
 
 
 class Requirement(BaseModel):
@@ -10,16 +8,6 @@ class Requirement(BaseModel):
     defectIds: list[int]
     priority: Level
     note: str
-
-
-class TestCase(BaseModel):
-    caseId: int 
-    desc: str
-    steps: str 
-    result: TestResult
-    performedBy: str | None
-    isAutomated: bool
-    
 
 class Matrix(BaseModel):
     matrixId: int

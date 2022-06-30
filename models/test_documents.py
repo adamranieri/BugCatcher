@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from enums import TestLevel, TestType
+from .enums import TestLevel, TestType
+from .enums import TestResult
 
 
 class Objective(BaseModel):
@@ -23,3 +24,22 @@ class TestPlan(BaseModel):
     deadlines: list[Deadline]
     featuresInScope: list[Objective]
     featuresOutScope: list[Objective]
+
+
+class TestCase(BaseModel):
+    caseId: int 
+    desc: str
+    steps: str 
+    result: TestResult
+    performedBy: str | None
+    isAutomated: bool
+    resultSummary: str | None
+
+class TestCaseForm(BaseModel):
+    desc: str
+    steps: str 
+    result: TestResult
+    performedBy: str | None
+    isAutomated: bool
+    resultSummary: str | None
+    

@@ -11,6 +11,7 @@ from models.enums import DefectStatus, Level
 
 from routers.employee_router import router as employee_router
 from routers.defect_router import router as defect_router
+from routers.case_router import router as case_router
 
 
 
@@ -26,6 +27,7 @@ app.add_middleware(
 
 app.include_router(employee_router)
 app.include_router(defect_router)    
+app.include_router(case_router)
 
 
 @app.delete('/debug/nuke', status_code=204)
