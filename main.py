@@ -1,18 +1,15 @@
+from unicodedata import name
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
-
 from fastapi.middleware.cors import CORSMiddleware
-from random import randint
-
 from models.defect_models import Defect
-
 from models.employee_models import EmployeeRecord, Role
 from models.enums import DefectStatus, Level
 
 from routers.employee_router import router as employee_router
 from routers.defect_router import router as defect_router
 from routers.case_router import router as case_router
-
+from routers.matrix_router import router as matrix_router
 
 
 app = FastAPI()
@@ -28,6 +25,17 @@ app.add_middleware(
 app.include_router(employee_router)
 app.include_router(defect_router)    
 app.include_router(case_router)
+app.include_router(matrix_router)
+
+class SPAStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope):
+        response = await super().get_response(path, scope)
+        if response.status_code == 404:
+            response = await super().get_response('.', scope)
+        return response
+
+app.mount('/web/', SPAStaticFiles(directory='web', html=True), name='whatever')
+
 
 
 @app.delete('/debug/nuke', status_code=204)
