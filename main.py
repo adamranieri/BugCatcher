@@ -1,10 +1,11 @@
 from unicodedata import name
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from models.defect_models import Defect
 from models.employee_models import EmployeeRecord, Role
 from models.enums import DefectStatus, Level
+from fastapi.templating import Jinja2Templates
 
 from routers.employee_router import router as employee_router
 from routers.defect_router import router as defect_router
@@ -26,15 +27,6 @@ app.include_router(employee_router)
 app.include_router(defect_router)    
 app.include_router(case_router)
 app.include_router(matrix_router)
-
-class SPAStaticFiles(StaticFiles):
-    async def get_response(self, path: str, scope):
-        response = await super().get_response(path, scope)
-        if response.status_code == 404:
-            response = await super().get_response('.', scope)
-        return response
-
-app.mount('/web/', SPAStaticFiles(directory='web', html=True), name='whatever')
 
 
 

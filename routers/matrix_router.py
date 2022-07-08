@@ -1,9 +1,24 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header
 from models.enums import Level
 from models.matrix_models import Matrix, MatrixForm, Requirement
 from random import randint
 
 router = APIRouter()
+
+matrix_store ={}
+
+for i in range(0,100):
+    matrix_store[f"{i}"] =  [
+        Matrix(matrixId=701, title="Wayne Airlines Customer Management App", 
+            requirements=[
+                Requirement(userStoryOrRule="As a Customer I want to buy a ticket", testCases=[801], defectIds=[901,902], priority=Level.HIGH, note="Must be done ASAP"),
+                Requirement(userStoryOrRule="As an Employee I want to cancel tickets for customers", testCases=[802], defectIds=[], priority=Level.LOW, note="Customers can currently do it but most do not know how"),
+                ]),
+        Matrix(matrixId=702, title="Lumber Bros Timber Lookup System", 
+            requirements=[
+                Requirement(userStoryOrRule="As a Lumberjack I san send pics of timber to get feedback from environments", testCases=[], defectIds=[903], priority=Level.LOW, note="Is a nice to have but not strictly necessary"),
+                Requirement(userStoryOrRule="All photos on the website must be at max 800px by 800px", testCases=[415,312], defectIds=[904], priority=Level.MED, note="Prohibitive Bandwidth in the field necissicates small photos"),
+                ])]
 
 matrices: list[Matrix] = [
     Matrix(matrixId=60001, title="Wayne Airlines Customer Management App", 
@@ -18,7 +33,7 @@ matrices: list[Matrix] = [
         ])]
 
 @router.post("/matrices", response_model=Matrix, status_code=201)
-def create_matrix(matrix_form: Matrix) -> Matrix:
+def create_matrix(matrix_form: Matrix, dev: str = Header(default="0")) -> Matrix:
     matrix = Matrix( **matrix_form.dict())
     matrix.matrixId = randint(10000,99999)
     matrices.append(matrix)
@@ -26,7 +41,7 @@ def create_matrix(matrix_form: Matrix) -> Matrix:
 
 
 @router.put("/matrices/{matrixId}/requirements", response_model=Matrix)
-def update_requirements(requirements:list[Requirement], matrixId: int) -> Matrix:
+def update_requirements(requirements:list[Requirement], matrixId: int, dev: str = Header(default="0")) -> Matrix:
     
     for matrix in matrices:
         if matrix.matrixId == matrixId:
@@ -37,7 +52,7 @@ def update_requirements(requirements:list[Requirement], matrixId: int) -> Matrix
 
 
 @router.get("/matrices", response_model=list[Matrix])
-def get_all_matrices()-> list[Matrix]:
+def get_all_matrices(dev: str = Header(default="0"))-> list[Matrix]:
     return matrices
 
 
